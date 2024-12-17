@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -19,5 +20,20 @@ export class UserController {
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<User> {
     return this.userService.findOne(id);
+  }
+}
+
+// Новый контроллер для работы с profile
+@Controller('profile')
+export class ProfileController {
+  constructor(private readonly userService: UserService) {}
+
+  @UseGuards(JwtAuthGuard)  // Применяем Guard
+  @Get()
+  getProfile(@Request() req) {
+    return {
+      login: req.user.username,
+      email: req.user.email,
+    };
   }
 }

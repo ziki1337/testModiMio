@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module'; // Импортируем DatabaseModule
 import { User } from './user/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { User } from './user/user.entity';
       synchronize: true, // Опционально: автоматически синхронизирует сущности с базой
     }),
     UserModule,
-    DatabaseModule, // Добавляем DatabaseModule в imports
+    DatabaseModule,
+    AuthModule, // Добавляем DatabaseModule в imports
   ],
 })
 export class AppModule {}
