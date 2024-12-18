@@ -6,8 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { BlacklistModule } from '../blacklist/blacklist.module';  // Импортируем BlacklistModule
-import { DatabaseModule } from 'src/database/database.module';
-import { BlacklistService } from 'src/blacklist/blacklist.service';
+import { DatabaseModule } from '../database/database.module';
+import { BlacklistService } from '../blacklist/blacklist.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({

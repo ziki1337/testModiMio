@@ -3,21 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Admin } from '../admin/admin.entity';
-import { BlacklistedToken } from 'src/blacklist/blacklist.entity';
+import { BlacklistedToken } from '../blacklist/blacklist.entity';
+import { UserBlacklistedToken } from '../userblacklist/userblacklist.entity';
 
 @Injectable()
 export class DatabaseService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>, // Здесь UserRepository инъектируется корректно
-    @InjectRepository(Admin)
-    private adminRepository: Repository<Admin>,
-    @InjectRepository(BlacklistedToken)
-    private blacklistedTokenRepository: Repository<BlacklistedToken>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>, // Убедись, что это правильно
+    @InjectRepository(BlacklistedToken) private readonly blacklistedTokenRepository: Repository<BlacklistedToken>,
+    @InjectRepository(UserBlacklistedToken) private readonly userBlacklistedTokenRepository: Repository<UserBlacklistedToken>,
   ) {}
 
-  // Метод для проверки и создания таблицы
+  // Метод для проверки и создания таблиц
   async checkAndCreateTables(): Promise<void> {
+    // Проверяем и создаем таблицу для пользователей
     const userTableExist = await this.userRepository.query(
       "SELECT to_regclass('public.user');",
     );
@@ -33,6 +33,7 @@ export class DatabaseService {
       console.log('Таблица "user" уже существует.');
     }
 
+    // Проверяем и создаем таблицу для админов
     const adminTableExist = await this.adminRepository.query(
       "SELECT to_regclass('public.admin');",
     );
@@ -47,7 +48,7 @@ export class DatabaseService {
       console.log('Таблица "admin" уже существует.');
     }
 
-    // Проверяем и создаем таблицу для черного списка
+    // Проверяем и создаем таблицу для черного списка админов
     const blacklistedTokenTableExist = await this.blacklistedTokenRepository.query(
       "SELECT to_regclass('public.blacklisted_token');",
     );
@@ -60,6 +61,21 @@ export class DatabaseService {
       );`);
     } else {
       console.log('Таблица "blacklisted_token" уже существует.');
+    }
+
+    // Проверяем и создаем таблицу для черного списка пользователей
+    const userBlacklistedTokenTableExist = await this.userBlacklistedTokenRepository.query(
+      "SELECT to_regclass('public.user_blacklisted_token');",
+    );
+    if (!userBlacklistedTokenTableExist[0].to_regclass) {
+      console.log('Таблица "user_blacklisted_token" не существует. Создаю...');
+      await this.userBlacklistedTokenRepository.query(`CREATE TABLE user_blacklisted_token (
+        id SERIAL PRIMARY KEY,
+        token VARCHAR(255) NOT NULL,
+        expiresAt TIMESTAMP NOT NULL
+      );`);
+    } else {
+      console.log('Таблица "user_blacklisted_token" уже существует.');
     }
   }
 }

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtUserGuard } from '../userblacklist/jwt-user.guard';
 
 @Controller('users')
 export class UserController {
@@ -24,15 +25,16 @@ export class UserController {
 }
 
 // Новый контроллер для работы с profile
+
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)  // Применяем Guard
+  @UseGuards(JwtUserGuard)  // Применяем Guard
   @Get()
   getProfile(@Request() req) {
     return {
-      login: req.user.username,
+      login: req.user.login,
       email: req.user.email,
     };
   }

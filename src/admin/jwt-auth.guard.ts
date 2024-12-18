@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { BlacklistService } from 'src/blacklist/blacklist.service';
+import { BlacklistService } from '../blacklist/blacklist.service';
 import { firstValueFrom, Observable } from 'rxjs'; // Импортируем firstValueFrom для работы с Observable
 
 @Injectable()

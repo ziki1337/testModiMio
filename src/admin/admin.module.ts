@@ -8,12 +8,12 @@ import { JwtAdminStrategy } from './jwt-admin.strategy';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAdminGuard } from './jwt-auth.guard';
-import { UserModule } from 'src/user/user.module';
-import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/user.entity';
-import { BlacklistModule } from 'src/blacklist/blacklist.module';
-import { DatabaseModule } from 'src/database/database.module';
-import { BlacklistedToken } from 'src/blacklist/blacklist.entity';
+import { UserModule } from '../user/user.module';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
+import { BlacklistModule } from '../blacklist/blacklist.module';
+import { DatabaseModule } from '../database/database.module';
+import { BlacklistedToken } from '../blacklist/blacklist.entity';
 
 @Module({
   imports: [
@@ -28,5 +28,6 @@ import { BlacklistedToken } from 'src/blacklist/blacklist.entity';
   ],
   providers: [AdminService, JwtAdminStrategy, JwtAdminGuard, UserService],
   controllers: [AdminController],
+  exports: [AdminService, TypeOrmModule],
 })
 export class AdminModule {}

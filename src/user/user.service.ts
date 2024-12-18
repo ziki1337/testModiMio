@@ -32,7 +32,7 @@ export class UserService {
 
   // Получение пользователя по ID
   async findOne(id: number) {
-    return this.userRepository.findOneBy({ id });
+    return this.userRepository.findOne({ where: { id } });
   }
 
   async findAllPaginated(page: number = 1, limit: number = 10): Promise<{ data: User[]; total: number }> {

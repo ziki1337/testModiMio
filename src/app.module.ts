@@ -9,6 +9,8 @@ import { Admin } from './admin/admin.entity';
 import { BlacklistModule } from './blacklist/blacklist.module';
 import { DatabaseService } from './database/database.service';
 import { BlacklistedToken } from './blacklist/blacklist.entity';
+import { UserBlacklistModule } from './userblacklist/userblacklist.module';
+import { UserBlacklistedToken } from './userblacklist/userblacklist.entity';
 
 @Module({
   imports: [
@@ -19,13 +21,14 @@ import { BlacklistedToken } from './blacklist/blacklist.entity';
       username: 'user',
       password: 'password',
       database: 'modimioDB',
-      entities: [User, Admin, BlacklistedToken],
-      synchronize: true, // Опционально: автоматически синхронизирует сущности с базой
+      entities: [User, Admin, BlacklistedToken, UserBlacklistedToken],
+      synchronize: true, 
     }),
     UserModule,
     AdminModule,
     BlacklistModule,
-    DatabaseModule,  // Добавляем после других модулей, где подключаются сущности
+    UserBlacklistModule,  // Должен быть импортирован до DatabaseModule
+    DatabaseModule,  
     AuthModule,
   ],
   providers: [DatabaseService],

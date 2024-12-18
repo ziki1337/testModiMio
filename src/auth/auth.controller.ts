@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAdminGuard } from 'src/admin/jwt-auth.guard';
+import { JwtAdminGuard } from '../admin/jwt-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';  // Импортируем JwtService
 import { BlacklistService } from '../blacklist/blacklist.service';  // Импортируем BlacklistService
