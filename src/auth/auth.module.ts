@@ -5,6 +5,10 @@ import { UserModule } from '../user/user.module'; // импортируем мо
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
+import { BlacklistModule } from '../blacklist/blacklist.module';  // Импортируем BlacklistModule
+import { DatabaseModule } from 'src/database/database.module';
+import { BlacklistService } from 'src/blacklist/blacklist.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
   imports: [
@@ -14,8 +18,10 @@ import { JwtStrategy } from './jwt.strategy';
       secret: 'TOPSECRET',
       signOptions: { expiresIn: '60m' },
     }),
+    BlacklistModule,  // Импортируем BlacklistModule для доступности BlacklistService
+    DatabaseModule
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, BlacklistService, JwtAuthGuard],
   controllers: [AuthController],
 })
 export class AuthModule {}

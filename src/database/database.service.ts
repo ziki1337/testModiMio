@@ -3,20 +3,23 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Admin } from '../admin/admin.entity';
+import { BlacklistedToken } from 'src/blacklist/blacklist.entity';
 
 @Injectable()
 export class DatabaseService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>, // Внедряем репозиторий
+    private userRepository: Repository<User>, // Здесь UserRepository инъектируется корректно
     @InjectRepository(Admin)
     private adminRepository: Repository<Admin>,
+    @InjectRepository(BlacklistedToken)
+    private blacklistedTokenRepository: Repository<BlacklistedToken>,
   ) {}
 
   // Метод для проверки и создания таблицы
   async checkAndCreateTables(): Promise<void> {
     const userTableExist = await this.userRepository.query(
-      "SELECT to_regclass('public.user');", // Проверка на существование таблицы
+      "SELECT to_regclass('public.user');",
     );
     if (!userTableExist[0].to_regclass) {
       console.log('Таблица "user" не существует. Создаю...');
@@ -42,6 +45,21 @@ export class DatabaseService {
       );`);
     } else {
       console.log('Таблица "admin" уже существует.');
+    }
+
+    // Проверяем и создаем таблицу для черного списка
+    const blacklistedTokenTableExist = await this.blacklistedTokenRepository.query(
+      "SELECT to_regclass('public.blacklisted_token');",
+    );
+    if (!blacklistedTokenTableExist[0].to_regclass) {
+      console.log('Таблица "blacklisted_token" не существует. Создаю...');
+      await this.blacklistedTokenRepository.query(`CREATE TABLE blacklisted_token (
+        id SERIAL PRIMARY KEY,
+        token VARCHAR(255) NOT NULL,
+        expiresAt TIMESTAMP NOT NULL
+      );`);
+    } else {
+      console.log('Таблица "blacklisted_token" уже существует.');
     }
   }
 }

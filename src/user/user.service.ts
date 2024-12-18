@@ -34,4 +34,14 @@ export class UserService {
   async findOne(id: number) {
     return this.userRepository.findOneBy({ id });
   }
+
+  async findAllPaginated(page: number = 1, limit: number = 10): Promise<{ data: User[]; total: number }> {
+    const [data, total] = await this.userRepository.findAndCount({
+      select: ['email', 'login'], // Выбираем только нужные поля
+      skip: (page - 1) * limit,  // Пропускаем записи для текущей страницы
+      take: limit,               // Количество записей на страницу
+    });
+
+    return { data, total };
+  }
 }

@@ -29,10 +29,11 @@ export class AuthService {
 
   // Генерация JWT токена
   async generateToken(user: any) {
-    const payload = { 
-      username: user.login, 
+    const payload = {
       sub: user.id,
-      email: user.email  // Добавляем email в payload
+      username: user.username,
+      email: user.email,
+      role: 'user', // Добавляем роль
     };
     return {
       access_token: this.jwtService.sign(payload),

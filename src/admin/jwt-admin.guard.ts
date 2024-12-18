@@ -1,13 +1,12 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BlacklistService } from 'src/blacklist/blacklist.service';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs'; // Импортируем firstValueFrom для работы с Observable
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAdminGuard extends AuthGuard('admin') {
   constructor(private readonly blacklistService: BlacklistService) {
     super();
-    Logger.log('BlacklistService in constructor:', blacklistService)
   }
 
   // Переопределяем метод canActivate, чтобы добавить проверку черного списка
@@ -15,13 +14,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     const token = this.extractToken(request);
 
-    Logger.log(this.blacklistService)
-    if (!this.blacklistService) {
-      throw new Error('BlacklistService is not defined!');
-    }
-
     // Если токен присутствует, проверяем, не находится ли он в черном списке
-    console.log(this.blacklistService);
     if (token && await this.blacklistService.isTokenBlacklisted(token)) {
       throw new UnauthorizedException('Token is blacklisted');
     }

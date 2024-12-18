@@ -6,6 +6,9 @@ import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { Admin } from './admin/admin.entity';
+import { BlacklistModule } from './blacklist/blacklist.module';
+import { DatabaseService } from './database/database.service';
+import { BlacklistedToken } from './blacklist/blacklist.entity';
 
 @Module({
   imports: [
@@ -16,13 +19,15 @@ import { Admin } from './admin/admin.entity';
       username: 'user',
       password: 'password',
       database: 'modimioDB',
-      entities: [User, Admin],
+      entities: [User, Admin, BlacklistedToken],
       synchronize: true, // Опционально: автоматически синхронизирует сущности с базой
     }),
     UserModule,
-    DatabaseModule,
+    AdminModule,
+    BlacklistModule,
+    DatabaseModule,  // Добавляем после других модулей, где подключаются сущности
     AuthModule,
-    AdminModule, // Добавляем DatabaseModule в imports
   ],
+  providers: [DatabaseService],
 })
 export class AppModule {}
