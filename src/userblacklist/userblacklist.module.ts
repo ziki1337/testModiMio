@@ -6,6 +6,6 @@ import { UserBlacklistService } from './userblacklist.service';
 @Module({
   imports: [TypeOrmModule.forFeature([UserBlacklistedToken])],  // Используем TypeOrmModule для регистрации репозитория
   providers: [UserBlacklistService],
-  exports: [UserBlacklistService, TypeOrmModule],  // Экспортируем TypeOrmModule для использования в других модулях
+  exports: [UserBlacklistService, TypeOrmModule], 
 })
 export class UserBlacklistModule {}

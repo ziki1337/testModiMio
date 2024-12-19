@@ -20,7 +20,7 @@ import { JwtUserStrategy } from '../userblacklist/jwt-user.strategy';
       signOptions: { expiresIn: '60m' },
     }),
     PassportModule.register({ defaultStrategy: 'user' }),
-    UserBlacklistModule,  // Подключаем UserBlacklistModule
+    UserBlacklistModule,
   ],
   providers: [UserService, JwtUserStrategy, JwtUserGuard],
   controllers: [UserController, ProfileController],

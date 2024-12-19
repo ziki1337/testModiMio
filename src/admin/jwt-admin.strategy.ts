@@ -22,12 +22,11 @@ export class JwtAdminStrategy extends PassportStrategy(Strategy, 'admin') {
       throw new UnauthorizedException('Not an admin');
     }
 
-    // Пытаемся найти администратора по ID из токена (payload.sub)
     const admin = await this.adminService.validateAdmin(payload.sub);
     if (!admin) {
       throw new UnauthorizedException('Admin not found');
     }
 
-    return admin; // Возвращаем администратора для использования в следующем процессе
+    return admin;
   }
 }

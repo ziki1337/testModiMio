@@ -12,35 +12,30 @@ export class AuthService {
 
   // Регистрация пользователя
   async register(login: string, email: string, password: string) {
-    // Проверка, существует ли уже пользователь
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
       throw new Error('User already exists');
     }
 
-    // Хэширование пароля
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Создание нового пользователя
     const user = await this.userService.createUser(login, email, hashedPassword);
 
     return this.generateToken(user);
   }
 
-  // Генерация JWT токена
   async generateToken(user: any) {
     const payload = {
       sub: user.id,
       username: user.username,
       email: user.email,
-      role: 'user', // Добавляем роль
+      role: 'user',
     };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  // Логика авторизации (опционально)
   async validateUser(login: string, password: string): Promise<any> {
     const user = await this.userService.findByLogin(login);
     if (!user) {

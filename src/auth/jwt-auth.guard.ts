@@ -9,8 +9,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
     Logger.log('BlacklistService in constructor:', blacklistService)
   }
-
-  // Переопределяем метод canActivate, чтобы добавить проверку черного списка
   async canActivate(context: any): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractToken(request);
@@ -20,20 +18,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new Error('BlacklistService is not defined!');
     }
 
-    // Если токен присутствует, проверяем, не находится ли он в черном списке
     console.log(this.blacklistService);
     if (token && await this.blacklistService.isTokenBlacklisted(token)) {
       throw new UnauthorizedException('Token is blacklisted');
     }
 
-    // Если токен не черный, продолжаем обычную проверку через AuthGuard
-    const result = await super.canActivate(context);  // Получаем результат (boolean или Observable<boolean>)
+    const result = await super.canActivate(context); 
     
-    // Если результат является Observable, преобразуем его в boolean
     return result instanceof Observable ? await firstValueFrom(result) : result;
   }
 
-  // Извлекаем токен из запроса (например, из заголовков Authorization)
   private extractToken(request): string | null {
     const authHeader = request.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {

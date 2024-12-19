@@ -10,14 +10,13 @@ import { UserBlacklistedToken } from '../userblacklist/userblacklist.entity';
 export class DatabaseService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>, // Убедись, что это правильно
+    @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
     @InjectRepository(BlacklistedToken) private readonly blacklistedTokenRepository: Repository<BlacklistedToken>,
     @InjectRepository(UserBlacklistedToken) private readonly userBlacklistedTokenRepository: Repository<UserBlacklistedToken>,
   ) {}
 
   // Метод для проверки и создания таблиц
   async checkAndCreateTables(): Promise<void> {
-    // Проверяем и создаем таблицу для пользователей
     const userTableExist = await this.userRepository.query(
       "SELECT to_regclass('public.user');",
     );

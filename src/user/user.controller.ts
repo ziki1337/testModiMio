@@ -24,13 +24,13 @@ export class UserController {
   }
 }
 
-// Новый контроллер для работы с profile
+// Контроллер для работы с profile
 
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtUserGuard)  // Применяем Guard
+  @UseGuards(JwtUserGuard)
   @Get()
   getProfile(@Request() req) {
     return {

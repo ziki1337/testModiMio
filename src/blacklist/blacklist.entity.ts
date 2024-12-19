@@ -9,5 +9,5 @@ export class BlacklistedToken {
   token: string;
 
   @Column()
-  expiresAt: Date;  // Время истечения срока действия токена
+  expiresAt: Date; 
 }

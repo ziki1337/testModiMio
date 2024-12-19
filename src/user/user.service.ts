@@ -35,11 +35,12 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  // Найти всех пользователей с пагинацией
   async findAllPaginated(page: number = 1, limit: number = 10): Promise<{ data: User[]; total: number }> {
     const [data, total] = await this.userRepository.findAndCount({
-      select: ['email', 'login'], // Выбираем только нужные поля
-      skip: (page - 1) * limit,  // Пропускаем записи для текущей страницы
-      take: limit,               // Количество записей на страницу
+      select: ['email', 'login'], 
+      skip: (page - 1) * limit, 
+      take: limit,              
     });
 
     return { data, total };

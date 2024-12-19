@@ -12,6 +12,6 @@ import { UserBlacklistModule } from '../userblacklist/userblacklist.module';
     TypeOrmModule.forFeature([User, Admin, BlacklistedToken, UserBlacklistedToken]),
   ],
   providers: [DatabaseService],
-  exports: [DatabaseService, TypeOrmModule],  // Экспортируем DatabaseService и TypeOrmModule для других модулей
+  exports: [DatabaseService, TypeOrmModule], 
 })
 export class DatabaseModule {}

@@ -1,27 +1,30 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserModule } from '../user/user.module'; // импортируем модуль пользователя
+import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
-import { BlacklistModule } from '../blacklist/blacklist.module';  // Импортируем BlacklistModule
+import { BlacklistModule } from '../blacklist/blacklist.module';
 import { DatabaseModule } from '../database/database.module';
 import { BlacklistService } from '../blacklist/blacklist.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserBlacklistModule } from '../userblacklist/userblacklist.module';
+import { UserBlacklistService } from '../userblacklist/userblacklist.service';
 
 @Module({
   imports: [
-    UserModule, // Модуль пользователя уже импортирован
+    UserModule,
     PassportModule,
     JwtModule.register({
       secret: 'TOPSECRET',
       signOptions: { expiresIn: '60m' },
     }),
-    BlacklistModule,  // Импортируем BlacklistModule для доступности BlacklistService
+    BlacklistModule,
+    UserBlacklistModule,
     DatabaseModule
   ],
-  providers: [AuthService, JwtStrategy, BlacklistService, JwtAuthGuard],
+  providers: [AuthService, JwtStrategy, BlacklistService, JwtAuthGuard, UserBlacklistService],
   controllers: [AuthController],
 })
 export class AuthModule {}

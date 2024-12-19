@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { ExtractJwt } from 'passport-jwt';
-import { UserService } from '../user/user.service';  // Сервис для работы с пользователями
+import { UserService } from '../user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
@@ -15,12 +15,12 @@ export class JwtUserStrategy extends PassportStrategy(Strategy, 'user') {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'yourSecretKey', // используйте свой секретный ключ
+      secretOrKey: 'TOPSECRET',
     });
   }
 
   async validate(payload: any) {
-    const user = await this.userRepository.findOne(payload.id);
+    const user = await this.userRepository.findOne({ where: { id: payload.sub } });
     if (!user) {
       throw new Error('Unauthorized');
     }

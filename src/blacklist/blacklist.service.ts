@@ -22,6 +22,6 @@ export class BlacklistService {
     const blacklistedToken = await this.blacklistedTokenRepository.findOne({
       where: { token },
     });
-    return !!blacklistedToken;  // Возвращаем true, если токен в черном списке
+    return !!blacklistedToken; 
   }
 }
